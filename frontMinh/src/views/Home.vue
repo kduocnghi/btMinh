@@ -1,66 +1,37 @@
 <template>
     <div class="container">
         <div class="home">
-            <h4>Card with primary and other information</h4>
+            <h4>Weather broadcast</h4>
             <hr>
-            <div class="border-card">
-                <div class="card-type-icon with-border">1</div>
+            <div class="border-card" v-for="item in listWeatherData" :key="item.id">
+                <div class="card-type-icon with-border">{{item.id}}</div>
                 <div class="content-wrapper">
                     <div class="label-group fixed">
-                        <p class="title">EG links</p>
-                        <p class="caption">Einheit</p>
+                        <p class="title">Device</p>
+                        <p class="caption">{{item.dev_id}}</p>
                     </div>
                     <div class="min-gap"></div>
                     <div class="label-group">
-                        <p class="title">Test</p>
-                        <p class="caption">Eigentümer</p>
+                        <p class="title">Temperature</p>
+                        <p class="caption">{{item.temperature_1}}</p>
                     </div>
                     <div class="min-gap"></div>
                     <div class="label-group">
-                        <p class="title">Alexander Oemisch</p>
-                        <p class="caption">Mieter</p>
+                        <p class="title">Humidity</p>
+                        <p class="caption">{{item.relative_humidity_2}}</p>
+                    </div>
+                    <div class="min-gap"></div>
+                    <div class="label-group">
+                        <p class="title">Latitude</p>
+                        <p class="caption">{{item.latitude}}</p>
+                    </div>
+                    <div class="min-gap"></div>
+                    <div class="label-group">
+                        <p class="title">Longitude</p>
+                        <p class="caption">{{item.longitude}}</p>
                     </div>
                 </div>
                 <i class="material-icons end-icon">more_vert</i>
-            </div>
-            <div class="border-card">
-                <div class="card-type-icon with-border">1</div>
-                <div class="content-wrapper">
-                    <div class="label-group fixed">
-                        <p class="title">EG links</p>
-                        <p class="caption">Einheit</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Marc-Philipp Weber</p>
-                        <p class="caption">Eigentümer</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Alexander Oemisch</p>
-                        <p class="caption">Mieter</p>
-                    </div>
-                </div>
-                <i class="material-icons end-icon">more_vert</i>
-            </div>
-            <div class="border-card">
-                <div class="card-type-icon with-border">1</div>
-                <div class="content-wrapper">
-                    <div class="label-group fixed">
-                        <p class="title">EG links</p>
-                        <p class="caption">Einheit</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Marc-Philipp Weber</p>
-                        <p class="caption">Eigentümer</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Alexander Oemisch</p>
-                        <p class="caption">Mieter</p>
-                    </div>
-                </div>
             </div>
         </div>
         <div v-if="!loading">
@@ -156,7 +127,7 @@
             this.fetchChartData(this.chartInfo);
             this.$socket.$subscribe('save_data', payload => {
                 console.log(payload);
-                this.listWeatherData.push(payload);
+                this.listWeatherData.unshift(payload);
                 console.log(this.listWeatherData);
             });
             this.loading = false;
