@@ -5,7 +5,7 @@
         <img class="country-symbol" :src="countryImg" />
       </div>
       <div class="clash-card__level clash-card__level--archer"></div>
-      <div class="clash-card__unit-name">{{ countryData ? countryData.dev_id : "Empty" }}</div>
+      <div class="clash-card__unit-name">{{ countryData ? countryData.dev_id + " ID:" + countryData.id : "Empty" }}</div>
       <div class="clash-card__unit-description">
         <dd>{{ countryData ? countryData.latitude + ' ' + countryData.longitude : "Empty" }}</dd>Tọa độ
       </div>
