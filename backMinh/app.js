@@ -93,10 +93,9 @@ ttn.data(appID, accessKey)
       let sql = 'INSERT INTO weather_measurement SET ?';
       let query = db.query(sql, weather_data, (err, result) => {
           if(err) throw err;
-          console.log('dm,dmdm');
+          weather_data.id = result.insertId;
           console.log(result);
           console.log('id:   '+ result.insertId);
-          console.log('dm,dmdm');
           io.sockets.emit('save_data', weather_data);
       });
     })
