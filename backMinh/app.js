@@ -27,19 +27,6 @@ const app = express();
  
 app.use(cors());
 
-
-
-// Delete post
-app.get('/getData/:id', (req, res) => {
-    let newTitle = 'Updated Title';
-    let sql = `DELETE FROM posts WHERE id = ${req.params.id}`;
-    let query = db.query(sql, (err, result) => {
-        if(err) throw err;
-        console.log(result);
-        res.send('Post deleted...');
-    });
-});
-
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
@@ -60,7 +47,7 @@ io.on('connection', (socket) => {
 
 // Select posts
 app.get('/get_init_weather_data', (req, res) => {
-  let sql = 'SELECT * FROM weather_measurement order by id desc limit 50';
+  let sql = 'SELECT * FROM weather_measurement order by id desc limit 5';
   let query = db.query(sql, (err, results) => {
       if(err) throw err;
       res.send(results);
@@ -106,7 +93,10 @@ ttn.data(appID, accessKey)
       let sql = 'INSERT INTO weather_measurement SET ?';
       let query = db.query(sql, weather_data, (err, result) => {
           if(err) throw err;
+          console.log('dm,dmdm');
           console.log(result);
+          console.log('id:   '+ result.insertId);
+          console.log('dm,dmdm');
           io.sockets.emit('save_data', weather_data);
       });
     })

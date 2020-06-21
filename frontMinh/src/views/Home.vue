@@ -1,45 +1,11 @@
 <template>
-    <div class="container">
-        <div class="home">
-            <h4>Weather broadcast</h4>
-            <hr>
-            <div class="border-card" v-for="item in listWeatherData" :key="item.id">
-                <div class="card-type-icon with-border">{{item.id}}</div>
-                <div class="content-wrapper">
-                    <div class="label-group fixed">
-                        <p class="title">Device</p>
-                        <p class="caption">{{item.dev_id}}</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Temperature</p>
-                        <p class="caption">{{item.temperature_1}}</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Humidity</p>
-                        <p class="caption">{{item.relative_humidity_2}}</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Latitude</p>
-                        <p class="caption">{{item.latitude}}</p>
-                    </div>
-                    <div class="min-gap"></div>
-                    <div class="label-group">
-                        <p class="title">Longitude</p>
-                        <p class="caption">{{item.longitude}}</p>
-                    </div>
-                </div>
-                <i class="material-icons end-icon">more_vert</i>
-            </div>
-        </div>
-        <div v-if="!loading">
+    <div class="container" v-if="!loading">
+        <div>
             <input type="radio" id="one" :value="true" v-model="isChart1">
-            <label for="one">One</label>
+            <label for="one">Device 1</label>
             <br>
             <input type="radio" id="two" :value="false" v-model="isChart1">
-            <label for="two">Two</label>
+            <label for="two">Device 2</label>
             <br>
             <div v-if="isChart1">
                 <line-chart
@@ -58,15 +24,20 @@
                 />
             </div>
         </div>
+        <Dashboard />
     </div>
 
 </template>
 
 <script>
     import LineChart from './LineChart';
+    import Dashboard from "./Dashboard.vue";
+
     export default {
         components: {
-            LineChart
+            LineChart,
+            Dashboard
+
         },
         name: 'Home',
         data() {
@@ -110,26 +81,20 @@
             };
         },
         async created() {
-            const result = await this.$axios.get(
-                this.$apiURL + "/get_init_weather_data",
-            );
-            if (result.data) {
-                this.listWeatherData = result.data;
-                console.log(result.data);
-            }
+            // const result = await this.$axios.get(
+            //     this.$apiURL + "/get_init_weather_data",
+            // );
+            // if (result.data) {
+            //     this.listWeatherData = result.data;
+            //     console.log(result.data);
+            // }
             const resultChartInfo = await this.$axios.get(
                 this.$apiURL + "/get_chart_info",
             );
-            if (result.data) {
+            if (resultChartInfo.data) {
                 this.chartInfo = resultChartInfo.data;
-                console.log(result.data);
             }
             this.fetchChartData(this.chartInfo);
-            this.$socket.$subscribe('save_data', payload => {
-                console.log(payload);
-                this.listWeatherData.unshift(payload);
-                console.log(this.listWeatherData);
-            });
             this.loading = false;
         },
         methods: {
@@ -138,12 +103,12 @@
                     if (chartInfo[i].dev_id === "device01") {
                         this.datasets.dev01_temp.data.push(chartInfo[i].temp_avg);
                         this.datasets.dev01_humi.data.push(chartInfo[i].humidity_avg);
-                        this.labelChartData.push(chartInfo[i].date_x);
+                        this.labelChartData.push(this.$moment(chartInfo[i].date_x).format('YYYY-MM-DD'));
                     }
                     if (chartInfo[i].dev_id === "device02") {
                         this.datasets2.dev02_temp.data.push(chartInfo[i].temp_avg);
                         this.datasets2.dev02_humi.data.push(chartInfo[i].humidity_avg);
-                        this.labelChartData2.push(chartInfo[i].date_x);
+                        this.labelChartData2.push(this.$moment(chartInfo[i].date_x).format('YYYY-MM-DD'));
                     }
                 }
             }
